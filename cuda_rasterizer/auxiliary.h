@@ -1,3 +1,4 @@
+#include "hip/hip_runtime.h"
 /*
  * Copyright (C) 2023, Inria
  * GRAPHDECO research group, https://team.inria.fr/graphdeco
@@ -168,7 +169,7 @@ __forceinline__ __device__ bool in_frustum(int idx,
 		if (prefiltered)
 		{
 			printf("Point is filtered although prefiltered is set. This shouldn't happen!");
-			__trap();
+			__builtin_trap();
 		}
 		return false;
 	}
@@ -177,10 +178,10 @@ __forceinline__ __device__ bool in_frustum(int idx,
 
 #define CHECK_CUDA(A, debug) \
 A; if(debug) { \
-auto ret = cudaDeviceSynchronize(); \
-if (ret != cudaSuccess) { \
-std::cerr << "\n[CUDA ERROR] in " << __FILE__ << "\nLine " << __LINE__ << ": " << cudaGetErrorString(ret); \
-throw std::runtime_error(cudaGetErrorString(ret)); \
+auto ret = hipDeviceSynchronize(); \
+if (ret != hipSuccess) { \
+std::cerr << "\n[CUDA ERROR] in " << __FILE__ << "\nLine " << __LINE__ << ": " << hipGetErrorString(ret); \
+throw std::runtime_error(hipGetErrorString(ret)); \
 } \
 }
 
